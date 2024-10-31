@@ -10,6 +10,16 @@ class PigLatin:
         if not self.phrase:
             return "nil"
 
+        words = self.phrase.split()
+        pig_latin_words = []
+
+        for word in words:
+            parts = word.split('-')
+            translated_parts = [self.translate_word(part) for part in parts]
+            pig_latin_words.append('-'.join(translated_parts))
+
+        return ' '.join(pig_latin_words)
+
     def translate_word(self, word: str) -> str:
         vowels = "aeiouAEIOU"
 
