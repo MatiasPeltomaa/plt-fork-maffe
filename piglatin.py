@@ -22,7 +22,7 @@ class PigLatin:
                 return word + "ay"
 
         else:
-            for i, letter in enumerate(word):
-                if letter in vowels:
-                    return word[i:] + word [:i] + "ay"
-            return word + "ay"
+            if len(word) > 1 and word[0] not in vowels:
+                return word[1:] + word[0] + "ay"
+            else:
+                return word + "ay"
