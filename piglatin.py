@@ -25,24 +25,39 @@ class PigLatin:
             base_word = re.sub(r'[.,;:\'?!()]+$', '', word)
             punctuation = word[len(base_word):]
             parts = base_word.split('-')
+            for part in parts:
+                if not self.is_valid_case(part) and not part.islower():
+                    raise PigLatinError(f"Invalid case '{part}' in input phrase.")
             translated_parts = [self.translate_word(part) for part in parts]
             pig_latin_words.append('-'.join(translated_parts) + punctuation)
 
         return ' '.join(pig_latin_words)
+
+    def is_valid_case(self, word: str) -> bool:
+        return word.isupper() or word.istitle()
 
     def translate_word(self, word: str) -> str:
         vowels = "aeiouAEIOU"
 
         if word[0] in vowels:
             if word[-1] == "y":
-                return word + "nay"
+                translated = word + "nay"
             elif word[-1] in vowels:
-                return word + "yay"
+                translated = word + "yay"
             else:
-                return word + "ay"
+                translated = word + "ay"
 
         else:
             for i, letter in enumerate(word):
                 if letter in vowels:
-                    return word[i:] + word[:i] + "ay"
-            return word + "ay"
+                    translated = word[i:] + word[:i] + "ay"
+                    break
+            else:
+                translated = word + "ay"
+
+        if word.isupper():
+            return translated.upper()
+        elif word.istitle():
+            return translated.capitalize()
+        else:
+            return translated.lower()
