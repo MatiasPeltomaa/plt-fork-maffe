@@ -45,3 +45,19 @@ class TestPigLatin(unittest.TestCase):
     def test_translate_mixed_words(self):
         plt = PigLatin("hello well-being world")
         self.assertEqual(plt.translate(), "ellohay ellway-eingbay orldway")
+
+    def test_translate_with_allowed_punctuation(self):
+        plt = PigLatin("hello world!")
+        self.assertEqual(plt.translate(), "ellohay orldway!")
+
+        plt = PigLatin("well-being, how are you?")
+        self.assertEqual(plt.translate(), "ellway-eingbay, owhay areyay ouyay?")
+
+    def test_translate_with_disallowed_punctuation(self):
+        with self.assertRaises(PigLatinError):
+            plt = PigLatin("hello world#")
+            plt.translate()
+
+        with self.assertRaises(PigLatinError):
+            plt = PigLatin("hello@world!")
+            plt.translate()

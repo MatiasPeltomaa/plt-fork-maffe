@@ -1,4 +1,8 @@
+from error import PigLatinError
+import re
+
 class PigLatin:
+    ALLOWED_PUNCTUATION = {'.', ',', ';', ':', "'", '?', '!', '(', ')'}
 
     def __init__(self, phrase: str):
         self.phrase = phrase
@@ -10,13 +14,19 @@ class PigLatin:
         if not self.phrase:
             return "nil"
 
+        for char in self.phrase:
+            if char not in self.ALLOWED_PUNCTUATION and not char.isalnum() and not char.isspace() and char != '-':
+                raise PigLatinError(f"Invalid character '{char}' in input phrase.")
+
         words = self.phrase.split()
         pig_latin_words = []
 
         for word in words:
-            parts = word.split('-')
+            base_word = re.sub(r'[.,;:\'?!()]+$', '', word)
+            punctuation = word[len(base_word):]
+            parts = base_word.split('-')
             translated_parts = [self.translate_word(part) for part in parts]
-            pig_latin_words.append('-'.join(translated_parts))
+            pig_latin_words.append('-'.join(translated_parts) + punctuation)
 
         return ' '.join(pig_latin_words)
 
